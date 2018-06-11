@@ -12,6 +12,8 @@
         <module>video-common</module>
         <module>video-pojo</module>
         <module>video-dao</module>
+        <module>video-service</module>
+        <module>video-api</module>
     </modules>
 
     <parent>
