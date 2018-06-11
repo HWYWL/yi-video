@@ -12,8 +12,8 @@ import tk.mybatis.spring.annotation.MapperScan;
  * @date 2018-6-11 17:32:22
  */
 @SpringBootApplication
-@MapperScan(basePackages="com.yi.dao")
-@ComponentScan(basePackages= {"com.yi"})
+@MapperScan(basePackages="com.yi.mapper")
+@ComponentScan(basePackages= {"com.yi", "org.n3r.idworker"})
 public class Application {
 	
 	public static void main(String[] args) {

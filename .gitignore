@@ -22,3 +22,9 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 .idea/
+.iml/
+video-service/video-service.iml
+video-pojo/video-pojo.iml
+video-dao/video-dao.iml
+video-common/video-common.iml
+video-api/video-api.iml
