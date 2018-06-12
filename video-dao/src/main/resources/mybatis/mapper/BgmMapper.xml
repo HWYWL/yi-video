@@ -96,6 +96,11 @@
     from bgm
     where id = #{id,jdbcType=VARCHAR}
   </select>
+  <select id="selectAll" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from bgm
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from bgm
     where id = #{id,jdbcType=VARCHAR}

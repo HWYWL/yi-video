@@ -49,7 +49,8 @@ public class UserController extends BasicController {
         }
 
         // 保存到数据库中的相对路径
-        String uploadPathDB = "/YI_VIDEO/" + userId + "/face";
+        String uploadPath = "/YI_VIDEO";
+        String uploadPathDB = "/" + userId + "/face";
 
         FileOutputStream fileOutputStream = null;
         InputStream inputStream = null;
@@ -57,7 +58,7 @@ public class UserController extends BasicController {
         try {
             if (files != null && files.length > 0) {
                 String fileName = files[0].getOriginalFilename();
-                String finalFacePath = uploadPathDB + "/" + fileName;
+                String finalFacePath = uploadPath + uploadPathDB + "/" + fileName;
                 FileUtil.touch(finalFacePath);
                 uploadPathDB += ("/" + fileName);
 
@@ -77,6 +78,27 @@ public class UserController extends BasicController {
         user.setFaceImage(uploadPathDB);
         userService.updateUserInfo(user);
 
-        return MessageResult.ok();
+        return MessageResult.ok(user);
+    }
+
+    /**
+     * 查询用户接口
+     * @param userId 用户id
+     * @return
+     */
+    @RequestMapping(value = "/queryUserInfo", method = RequestMethod.POST)
+    @ApiImplicitParam(name="userId", value="用户id", required=true, dataType="String", paramType="query")
+    @ApiOperation(value="查询用户信息", notes="查询用户信息接口")
+    public MessageResult queryUserInfo(String userId) {
+        if (StringUtils.isBlank(userId)) {
+            return MessageResult.errorMsg("用户id不能为空...");
+        }
+
+        Users users = userService.queryUserInfo(userId);
+
+        UsersVo usersVo = new UsersVo();
+        BeanUtil.copyProperties(users, usersVo);
+
+        return MessageResult.ok(usersVo);
     }
 }

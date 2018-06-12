@@ -18,6 +18,8 @@ public interface BgmMapper {
 
     List<Bgm> selectByExample(BgmExample example);
 
+    List<Bgm> selectAll();
+
     Bgm selectByPrimaryKey(String id);
 
     int updateByExampleSelective(@Param("record") Bgm record, @Param("example") BgmExample example);

@@ -1,4 +1,4 @@
-package com.yi;
+package com.yi.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +17,11 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Swagger2 配置
+ * @author YI
+ * @date 2018-6-12 15:49:43
+ */
 @Configuration
 @EnableSwagger2
 public class Swagger2 {
