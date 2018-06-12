@@ -9,7 +9,9 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @Description: 使用redisTemplate的操作实现类 
+ * 使用redisTemplate的操作实现类
+ * @author YI
+ * @date 2018-6-12 10:54:28
  */
 @Component
 public class RedisOperator {

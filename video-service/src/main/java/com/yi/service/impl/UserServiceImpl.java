@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * 用户操作实现类
  * @author YI
@@ -24,7 +26,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private Sid sid;
 
-    @Transactional(propagation = Propagation.SUPPORTS)
+    @Transactional(propagation = Propagation.SUPPORTS, rollbackFor = Exception.class)
     @Override
     public boolean queryUsernameIsExist(String username) {
         UsersExample example = new UsersExample();
@@ -37,10 +39,31 @@ public class UserServiceImpl implements UserService {
         return count == 0 ? false : true;
     }
 
-    @Transactional(propagation = Propagation.REQUIRED)
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     @Override
     public void saveUser(Users user) {
         user.setId(sid.nextShort());
         usersMapper.insert(user);
+    }
+
+    @Override
+    public List<Users> queryUsername(String username) {
+        UsersExample example = new UsersExample();
+        Criteria criteria = example.createCriteria();
+
+        criteria.andUsernameEqualTo(username);
+
+        return usersMapper.selectByExample(example);
+    }
+
+    @Override
+    public List<Users> queryUsernameAndPassWord(String username, String password) {
+        UsersExample example = new UsersExample();
+        Criteria criteria = example.createCriteria();
+
+        criteria.andUsernameEqualTo(username);
+        criteria.andPasswordEqualTo(password);
+
+        return usersMapper.selectByExample(example);
     }
 }

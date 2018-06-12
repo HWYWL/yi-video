@@ -1,7 +1,6 @@
 package com.yi.controller;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.bean.copier.BeanCopier;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.digest.DigestUtil;
 import com.yi.model.Users;
@@ -12,7 +11,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,8 +25,8 @@ import java.util.List;
  * @date 2018-6-11 21:53:14
  */
 @RestController
-@Api(value = "用户接口登录注册", tags = "用户接口登录注册")
-public class RegistLoginController extends BasicController {
+@Api(value = "用户接口", tags = "用户接口")
+public class UserController extends BasicController {
 
     @Autowired
     private UserService userService;

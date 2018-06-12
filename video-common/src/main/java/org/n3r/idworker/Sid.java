@@ -7,6 +7,9 @@ import org.springframework.stereotype.Component;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * 唯一id生成 可作为数据库id主键
+ */
 @Component
 public class Sid {
     private static WorkerIdStrategy workerIdStrategy;
