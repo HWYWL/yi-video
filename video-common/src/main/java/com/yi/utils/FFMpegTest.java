@@ -53,9 +53,10 @@ public class FFMpegTest {
 	}
 
 	public static void main(String[] args) {
-		FFMpegTest ffmpeg = new FFMpegTest("C:\\ffmpeg\\bin\\ffmpeg.exe");
+		FFMpegTest ffmpeg = new FFMpegTest("I:\\Program Files\\ffmpeg\\bin\\ffmpeg.exe");
 		try {
-			ffmpeg.convertor("C:\\苏州大裤衩.mp4", "C:\\北京北京.avi");
+			ffmpeg.convertor("D:\\YI_VIDEO\\180612G6XY3XCXD4\\video\\tmp_56e196a171a1cbb03ab13c678019f9ceed4f5c5c59f420b4.mp4",
+					"D:\\YI_VIDEO\\180612G6XY3XCXD4\\video\\aaa.avi");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

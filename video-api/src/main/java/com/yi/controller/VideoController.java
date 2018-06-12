@@ -1,7 +1,6 @@
 package com.yi.controller;
 
 import cn.hutool.core.io.FileUtil;
-import com.yi.model.Users;
 import com.yi.service.UserService;
 import com.yi.utils.MessageResult;
 import io.swagger.annotations.*;
