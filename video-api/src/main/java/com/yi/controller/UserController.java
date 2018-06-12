@@ -1,6 +1,7 @@
 package com.yi.controller;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.digest.DigestUtil;
 import com.yi.model.Users;
@@ -10,13 +11,15 @@ import com.yi.vo.UsersVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -26,102 +29,54 @@ import java.util.List;
  */
 @RestController
 @Api(value = "用户接口", tags = "用户接口")
+@RequestMapping("/user")
 public class UserController extends BasicController {
 
     @Autowired
     private UserService userService;
 
-    // redis 超时时间（ms）
-    public static final int REDIS_TIMEOUT = 1000 * 60 * 30;
-
     /**
-     * 用户注册
-     * @param users
+     * 上传用户头像
+     * @param userId    用户id
+     * @param files 头像文件
      * @return
      */
-    @RequestMapping(value = "/regist", method = RequestMethod.POST)
-    @ApiOperation(value="用户注册", notes="用户注册接口")
-    public MessageResult regist(@RequestBody Users users){
-        if (users == null || StringUtils.isBlank(users.getUsername()) || StringUtils.isBlank(users.getPassword())){
-            return MessageResult.errorMsg("用户名或者密码不能为空");
+    @RequestMapping(value = "/uploadFace", method = RequestMethod.POST)
+    @ApiOperation(value="用户上传头像", notes="用户上传头像接口")
+    public MessageResult uploadFace(String userId, @RequestParam("file") MultipartFile[] files) {
+        if (StringUtils.isBlank(userId)) {
+            return MessageResult.errorMsg("用户id不能为空...");
         }
 
-        boolean isExist = userService.queryUsernameIsExist(users.getUsername());
-        if (isExist){
-            return MessageResult.errorMsg("用户名已存在");
-        }else {
-            users.setNickname(users.getUsername());
-            users.setPassword(DigestUtil.md5Hex(users.getPassword()));
+        // 保存到数据库中的相对路径
+        String uploadPathDB = "/YI_VIDEO/" + userId + "/face";
 
-            userService.saveUser(users);
+        FileOutputStream fileOutputStream = null;
+        InputStream inputStream = null;
+
+        try {
+            if (files != null && files.length > 0) {
+                String fileName = files[0].getOriginalFilename();
+                String finalFacePath = uploadPathDB + "/" + fileName;
+                FileUtil.touch(finalFacePath);
+                uploadPathDB += ("/" + fileName);
+
+                File outFile = new File(finalFacePath);
+                fileOutputStream = new FileOutputStream(outFile);
+
+                inputStream = files[0].getInputStream();
+                IOUtils.copy(inputStream, fileOutputStream);
+            }
+        }catch (Exception e){
+            return MessageResult.errorMsg("头像上传失败");
         }
 
-        List<Users> usersList = userService.queryUsernameAndPassWord(users.getUsername(), users.getPassword());
-
-        UsersVo usersVo = setUserRedisSessionToken(usersList.get(0));
-        usersVo.setPassword("");
-
-        return MessageResult.ok(usersVo);
-    }
-
-    /**
-     * 用户登录
-     * @param users
-     * @return
-     */
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
-    @ApiOperation(value="用户登录", notes="用户登录接口")
-    public MessageResult login(@RequestBody Users users){
-        if (users == null || StringUtils.isBlank(users.getUsername()) || StringUtils.isBlank(users.getPassword())){
-            return MessageResult.errorMsg("用户名或者密码不能为空");
-        }
-
-        List<Users> usersList = userService.queryUsername(users.getUsername());
-        if (usersList == null || usersList.size() == 0){
-            return MessageResult.errorMsg("用户不存在!");
-        }
-
-        Users user = usersList.get(0);
-
-        if (!user.getPassword().equals(DigestUtil.md5Hex(users.getPassword()))){
-            return MessageResult.errorMsg("用户或密码不正确!");
-        }
-
-        UsersVo usersVo = setUserRedisSessionToken(user);
-        usersVo.setPassword("");
-
-        return MessageResult.ok(usersVo);
-    }
-
-    /**
-     * 用户注销
-     * @param userId 用户id
-     * @return
-     */
-    @RequestMapping(value = "/logout", method = RequestMethod.POST)
-    @ApiOperation(value="用户注销", notes="用户注销接口")
-    @ApiImplicitParam(name="userId", value="用户id", required=true, dataType="String", paramType="query")
-    public MessageResult logout(String userId){
-        redis.del(USER_REDIS_SESSION + ":" + userId);
+        //保存头像信息到数据库
+        Users user = new Users();
+        user.setId(userId);
+        user.setFaceImage(uploadPathDB);
+        userService.updateUserInfo(user);
 
         return MessageResult.ok();
-    }
-
-    /**
-     * 把Token放入redis
-     * @param users
-     * @return
-     */
-    private UsersVo setUserRedisSessionToken(Users users){
-        String token = SecureUtil.simpleUUID();
-
-        redis.set(USER_REDIS_SESSION + ":" + users.getId(), token, REDIS_TIMEOUT);
-
-        UsersVo usersVo = new UsersVo();
-
-        BeanUtil.copyProperties(users, usersVo);
-        usersVo.setUserToken(token);
-
-        return usersVo;
     }
 }

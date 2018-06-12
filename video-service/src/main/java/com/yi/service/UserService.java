@@ -39,4 +39,10 @@ public interface UserService {
      * @return
      */
     List<Users> queryUsernameAndPassWord(String username, String password);
+
+    /**
+     * 更新用户信息
+     * @param users
+     */
+    void updateUserInfo(Users users);
 }

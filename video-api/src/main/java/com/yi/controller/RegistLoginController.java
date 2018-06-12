@@ -33,7 +33,9 @@ public class RegistLoginController extends BasicController {
     @Autowired
     private UserService userService;
 
-    // redis 超时时间（ms）
+    /**
+     * redis token超时时间（ms）
+     */
     public static final int REDIS_TIMEOUT = 1000 * 60 * 30;
 
     /**
