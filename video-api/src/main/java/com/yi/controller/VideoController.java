@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 登录注册
@@ -216,17 +217,30 @@ public class VideoController extends BasicController {
 
     /**
      * 查询视频分页接口
+     * @param video
+     * @param isSaveRecord 1 - 需要保存 0 - 不需要保存 ，或者为空的时候
      * @param page
      * @return
      */
     @ApiImplicitParam(name="page", value="当前页数", required=true, dataType="Integer", paramType="query")
     @ApiOperation(value="视频分页", notes="查询视频分页接口")
     @RequestMapping(value="/showAll", method = RequestMethod.POST)
-    public MessageResult showAll(Integer page) {
+    public MessageResult showAll(@RequestBody Videos video, Integer isSaveRecord, Integer page) {
         page = page == null ? 1 : page;
 
-        PagedResult videos = videoService.getAllVideos(page, PAGE_SIZE);
+        PagedResult videos = videoService.getAllVideos(video, isSaveRecord, page, PAGE_SIZE);
 
         return MessageResult.ok(videos);
+    }
+
+    /**
+     * 热搜词
+     * @return
+     */
+    @ApiOperation(value="热搜", notes="查询热搜接口")
+    @RequestMapping(value="/hot", method = RequestMethod.POST)
+    public MessageResult hot() {
+        List<String> hotWords = videoService.getHotWords();
+        return MessageResult.ok(hotWords);
     }
 }

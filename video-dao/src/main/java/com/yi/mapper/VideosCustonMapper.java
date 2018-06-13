@@ -3,6 +3,7 @@ package com.yi.mapper;
 import com.yi.model.Videos;
 import com.yi.utils.MyMapper;
 import com.yi.vo.VideosVo;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -12,5 +13,5 @@ import java.util.List;
  * @date 2018-6-13 14:46:41
  */
 public interface VideosCustonMapper extends MyMapper<Videos> {
-    List<VideosVo> queryAllVideos();
+    List<VideosVo> queryAllVideos(@Param("videoDesc") String videoDesc, @Param("userId") String userId);
 }

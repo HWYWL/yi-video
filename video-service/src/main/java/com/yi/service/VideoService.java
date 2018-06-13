@@ -3,6 +3,8 @@ package com.yi.service;
 import com.yi.model.Videos;
 import com.yi.utils.PagedResult;
 
+import java.util.List;
+
 /**
  * 视频操作
  * @author YI
@@ -29,5 +31,11 @@ public interface VideoService {
      * @param pageSize  页大小
      * @return
      */
-    PagedResult getAllVideos(Integer page, Integer pageSize);
+    PagedResult getAllVideos(Videos video, Integer isSaveRecord, Integer page, Integer pageSize);
+
+    /**
+     * 获取热搜词
+     * @return
+     */
+    List<String> getHotWords();
 }
