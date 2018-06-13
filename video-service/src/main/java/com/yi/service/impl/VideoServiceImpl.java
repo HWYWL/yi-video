@@ -1,13 +1,20 @@
 package com.yi.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.yi.mapper.VideosCustonMapper;
 import com.yi.mapper.VideosMapper;
 import com.yi.model.Videos;
 import com.yi.service.VideoService;
+import com.yi.utils.PagedResult;
+import com.yi.vo.VideosVo;
 import org.n3r.idworker.Sid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * 视频实现类
@@ -18,6 +25,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class VideoServiceImpl implements VideoService {
     @Autowired
     private VideosMapper videosMapper;
+
+    @Autowired
+    private VideosCustonMapper videosCustonMapper;
 
     @Autowired
     private Sid sid;
@@ -40,5 +50,20 @@ public class VideoServiceImpl implements VideoService {
         videos.setCoverPath(uploadPathDB);
 
         videosMapper.updateByPrimaryKeySelective(videos);
+    }
+
+    @Override
+    public PagedResult getAllVideos(Integer page, Integer pageSize) {
+        PageHelper.startPage(page, pageSize);
+        List<VideosVo> allVideos = videosCustonMapper.queryAllVideos();
+
+        PageInfo<VideosVo> voPageInfo = new PageInfo<>(allVideos);
+        PagedResult pagedResult = new PagedResult();
+        pagedResult.setPage(page);
+        pagedResult.setTotal(voPageInfo.getPages());
+        pagedResult.setRows(allVideos);
+        pagedResult.setRecords(voPageInfo.getTotal());
+
+        return pagedResult;
     }
 }

@@ -7,8 +7,10 @@ import com.yi.model.Bgm;
 import com.yi.model.Videos;
 import com.yi.service.BgmService;
 import com.yi.service.VideoService;
+import com.yi.utils.FetchVideoCover;
 import com.yi.utils.MergeVideoMp3;
 import com.yi.utils.MessageResult;
+import com.yi.utils.PagedResult;
 import io.swagger.annotations.*;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -76,6 +78,8 @@ public class VideoController extends BasicController {
         // 保存到数据库中的相对路径
         String uploadPath = "/YI_VIDEO";
         String uploadPathDB = "/" + userId + "/video";
+        // 封面
+        String coverPathDB = "/" + userId + "/video";
 
         FileOutputStream fileOutputStream;
         InputStream inputStream;
@@ -108,13 +112,17 @@ public class VideoController extends BasicController {
             finalbgmPath = uploadPath + bgm.getPath();
 
             MergeVideoMp3 mergeVideoMp3 = new MergeVideoMp3(FFMPEG_EXE_FILE);
+            FetchVideoCover fetchVideoCover = new FetchVideoCover(FFMPEG_EXE_FILE);
 
             try {
-                String name = SecureUtil.simpleUUID() + ".mp4";
-                uploadPathDB += ("/" + name);
+                String name = SecureUtil.simpleUUID();
+                uploadPathDB += ("/" + name+ ".mp4");
+                coverPathDB += ("/" + name+ ".jpg");
                 finalVideoOutPath = uploadPath + uploadPathDB;
                 // 视频合成
                 mergeVideoMp3.convertor(finalVideoPath, finalbgmPath, videoSeconds, finalVideoOutPath);
+                // 封面截图
+                fetchVideoCover.getCover(finalVideoPath, uploadPath + coverPathDB);
             } catch (Exception e) {
                 e.printStackTrace();
                 return MessageResult.errorMsg("视频合成失败!");
@@ -129,7 +137,8 @@ public class VideoController extends BasicController {
         video.setVideoHeight(videoHeight);
         video.setVideoWidth(videoWidth);
         video.setVideoDesc(desc);
-        video.setVideoPath(finalVideoOutPath);
+        video.setVideoPath(uploadPathDB);
+        video.setCoverPath(coverPathDB);
         video.setStatus(VideoStatusEnum.SUCCESS.value);
         video.setCreateTime(new Date());
 
@@ -138,6 +147,14 @@ public class VideoController extends BasicController {
         return MessageResult.ok(videoId);
     }
 
+    /**
+     * 上传视频封面 应为微信的bug，此功能作废
+     * @param userId
+     * @param videoId
+     * @param file
+     * @return
+     * @throws Exception
+     */
     @ApiOperation(value="上传封面", notes="上传封面的接口")
     @ApiImplicitParams({
             @ApiImplicitParam(name="userId", value="用户id", required=true,
@@ -146,6 +163,7 @@ public class VideoController extends BasicController {
                     dataType="String", paramType="form")
     })
     @RequestMapping(value="/uploadCover", headers="content-type=multipart/form-data", method = RequestMethod.POST)
+    @Deprecated
     public MessageResult uploadCover(String userId, String videoId,
                                        @ApiParam(value="视频封面", required=true) MultipartFile file) throws Exception {
         if (StringUtils.isBlank(videoId) || StringUtils.isBlank(userId)) {
@@ -194,5 +212,23 @@ public class VideoController extends BasicController {
         videoService.updateVideo(videoId, uploadPathDB);
 
         return MessageResult.ok();
+    }
+
+    /**
+     * 查询视频分页接口
+     * @param page
+     * @return
+     */
+    @ApiImplicitParam(name="page", value="当前页数", required=true, dataType="Integer", paramType="query")
+    @ApiOperation(value="视频分页", notes="查询视频分页接口")
+    @RequestMapping(value="/showAll", method = RequestMethod.POST)
+    public MessageResult showAll(Integer page) {
+        if (page == null){
+            page = 1;
+        }
+
+        PagedResult videos = videoService.getAllVideos(page, PAGE_SIZE);
+
+        return MessageResult.ok(videos);
     }
 }

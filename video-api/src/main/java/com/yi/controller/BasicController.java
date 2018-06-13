@@ -19,9 +19,20 @@ public class BasicController {
     @Autowired
     public RedisOperator redis;
 
+    /**
+     * redis key
+     */
     public static final String USER_REDIS_SESSION = "user_redis_session";
 
+    /**
+     * ffmpeg 文件路径
+     */
     public static String FFMPEG_EXE_FILE;
+
+    /**
+     * 分页大小
+     */
+    public static final Integer PAGE_SIZE = 10;
 
     @Value("${ffmpeg.path}")
     public void setFfmpegExeFile(String ffmpegExeFile) {
