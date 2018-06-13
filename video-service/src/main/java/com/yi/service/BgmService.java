@@ -5,7 +5,7 @@ import com.yi.model.Bgm;
 import java.util.List;
 
 /**
- * 用户操作
+ * BGM操作
  * @author YI
  * @date 2018-6-11 22:03:55
  */
@@ -16,4 +16,11 @@ public interface BgmService {
      * @return
      */
     List<Bgm> queryBgmList();
+
+    /**
+     * 根据id查询bgm
+     * @param bgmId
+     * @return
+     */
+    Bgm queryBgmById(String bgmId);
 }

@@ -7,8 +7,9 @@ import java.io.InputStreamReader;
 import java.util.List;
 
 /**
- * 
- * @Description: 获取视频的信息
+ * 视频截图作为封面
+ * @author YI
+ * @date 2018-6-13 11:53:21
  */
 public class FetchVideoCover {
 	// 视频路径
@@ -16,7 +17,7 @@ public class FetchVideoCover {
 
 	public void getCover(String videoInputPath, String coverOutputPath) throws IOException, InterruptedException {
 //		ffmpeg.exe -ss 00:00:01 -i spring.mp4 -vframes 1 bb.jpg
-		List<String> command = new java.util.ArrayList<String>();
+		List<String> command = new java.util.ArrayList<>();
 		command.add(ffmpegEXE);
 		
 		// 指定截取第1秒
@@ -76,7 +77,7 @@ public class FetchVideoCover {
 	
 	public static void main(String[] args) {
 		// 获取视频信息。
-		FetchVideoCover videoInfo = new FetchVideoCover("c:\\ffmpeg\\bin\\ffmpeg.exe");
+		FetchVideoCover videoInfo = new FetchVideoCover("H:\\Program Files\\ffmpeg\\bin\\ffmpeg.exe");
 		try {
 			videoInfo.getCover("c:\\北京北京.avi","c:\\北京.jpg");
 

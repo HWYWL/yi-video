@@ -56,8 +56,8 @@ public class Videos implements Serializable {
 
     /**
      * 视频状态：
-1、发布成功
-2、禁止播放，管理员操作
+     * 1、发布成功
+     * 2、禁止播放，管理员操作
      */
     private Integer status;
 

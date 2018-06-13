@@ -6,6 +6,11 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * FFMpeg 合成
+ * @author YI
+ * @date 2018-6-13 09:25:57
+ */
 public class FFMpegTest {
 
 	private String ffmpegEXE;
@@ -53,7 +58,7 @@ public class FFMpegTest {
 	}
 
 	public static void main(String[] args) {
-		FFMpegTest ffmpeg = new FFMpegTest("I:\\Program Files\\ffmpeg\\bin\\ffmpeg.exe");
+		FFMpegTest ffmpeg = new FFMpegTest("H:\\Program Files\\ffmpeg\\bin\\ffmpeg.exe");
 		try {
 			ffmpeg.convertor("D:\\YI_VIDEO\\180612G6XY3XCXD4\\video\\tmp_56e196a171a1cbb03ab13c678019f9ceed4f5c5c59f420b4.mp4",
 					"D:\\YI_VIDEO\\180612G6XY3XCXD4\\video\\aaa.avi");

@@ -6,6 +6,11 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * FFMpeg 合成 视频和mp3
+ * @author YI
+ * @date 2018-6-13 09:39:42
+ */
 public class MergeVideoMp3 {
 
 	private String ffmpegEXE;
@@ -33,10 +38,6 @@ public class MergeVideoMp3 {
 		command.add("-y");
 		command.add(videoOutputPath);
 		
-//		for (String c : command) {
-//			System.out.print(c + " ");
-//		}
-		
 		ProcessBuilder builder = new ProcessBuilder(command);
 		Process process = builder.start();
 		
@@ -61,7 +62,7 @@ public class MergeVideoMp3 {
 	}
 
 	public static void main(String[] args) {
-		MergeVideoMp3 ffmpeg = new MergeVideoMp3("C:\\ffmpeg\\bin\\ffmpeg.exe");
+		MergeVideoMp3 ffmpeg = new MergeVideoMp3("H:\\Program Files\\ffmpeg\\bin\\ffmpeg.exe");
 		try {
 			ffmpeg.convertor("C:\\苏州大裤衩.mp4", "C:\\music.mp3", 7.1, "C:\\这是通过java生产的视频.mp4");
 		} catch (Exception e) {
