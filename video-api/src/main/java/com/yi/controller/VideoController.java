@@ -223,9 +223,7 @@ public class VideoController extends BasicController {
     @ApiOperation(value="视频分页", notes="查询视频分页接口")
     @RequestMapping(value="/showAll", method = RequestMethod.POST)
     public MessageResult showAll(Integer page) {
-        if (page == null){
-            page = 1;
-        }
+        page = page == null ? 1 : page;
 
         PagedResult videos = videoService.getAllVideos(page, PAGE_SIZE);
 
