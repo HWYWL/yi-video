@@ -3,6 +3,7 @@ package com.yi.controller;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.io.FileUtil;
 import com.yi.model.Users;
+import com.yi.model.UsersReport;
 import com.yi.service.UserService;
 import com.yi.utils.MessageResult;
 import com.yi.vo.PublisherVideo;
@@ -176,5 +177,14 @@ public class UserController extends BasicController {
         userService.deleteUserFanRelation(userId, fanId);
 
         return MessageResult.ok();
+    }
+
+    @RequestMapping(value = "/reportUser", method = RequestMethod.POST)
+    @ApiOperation(value="举报用户", notes="举报用户接口")
+    public MessageResult reportUser(@RequestBody UsersReport usersReport) {
+
+        userService.reportUser(usersReport);
+
+        return MessageResult.errorMsg("举报成功...");
     }
 }

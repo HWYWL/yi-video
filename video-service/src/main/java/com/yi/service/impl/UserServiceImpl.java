@@ -3,6 +3,7 @@ package com.yi.service.impl;
 import com.yi.mapper.UsersFansMapper;
 import com.yi.mapper.UsersLikeVideosMapper;
 import com.yi.mapper.UsersMapper;
+import com.yi.mapper.UsersReportMapper;
 import com.yi.model.*;
 import com.yi.model.UsersExample.Criteria;
 import com.yi.service.UserService;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -29,6 +31,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     UsersFansMapper usersFansMapper;
+
+    @Autowired
+    UsersReportMapper usersReportMapper;
 
     @Autowired
     private Sid sid;
@@ -144,5 +149,13 @@ public class UserServiceImpl implements UserService {
         List<UsersFans> fansList = usersFansMapper.selectByExample(example);
 
         return fansList != null && fansList.size() > 0;
+    }
+
+    @Override
+    public void reportUser(UsersReport usersReport) {
+        usersReport.setId(sid.nextShort());
+        usersReport.setCreateDate(new Date());
+
+        usersReportMapper.insert(usersReport);
     }
 }

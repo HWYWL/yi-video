@@ -2,6 +2,7 @@ package com.yi.service;
 
 import com.yi.model.Users;
 import com.yi.model.UsersExample;
+import com.yi.model.UsersReport;
 
 import java.util.List;
 
@@ -81,4 +82,10 @@ public interface UserService {
      * @return
      */
     Boolean queryIsFollow(String userId, String fanid);
+
+    /**
+     * 举报用户
+     * @param usersReport
+     */
+    void reportUser(UsersReport usersReport);
 }
