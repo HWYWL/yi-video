@@ -27,4 +27,16 @@ public interface UsersMapper {
     int updateByPrimaryKeySelective(Users record);
 
     int updateByPrimaryKey(Users record);
+
+    /**
+     * 用户受喜欢数累加
+     * @param userId 用户id
+     */
+    void addReceiveLikeCount(String userId);
+
+    /**
+     * 用户受喜欢数累减
+     * @param userId 用户id
+     */
+    void reduceReceiveLikeCount(String userId);
 }

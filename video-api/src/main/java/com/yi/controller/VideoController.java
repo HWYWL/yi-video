@@ -243,4 +243,32 @@ public class VideoController extends BasicController {
         List<String> hotWords = videoService.getHotWords();
         return MessageResult.ok(hotWords);
     }
+
+    /**
+     * 点赞
+     * @param userId 点赞人用户id
+     * @param videoId 视频id
+     * @param videoCreaterId 视频拥有者用户id
+     * @return
+     */
+    @ApiOperation(value="点赞", notes="点赞接口")
+    @RequestMapping(value="/userLike", method = RequestMethod.POST)
+    public MessageResult userLike(String userId, String videoId, String videoCreaterId) {
+        videoService.userLikeVideo(userId, videoId, videoCreaterId);
+        return MessageResult.ok();
+    }
+
+    /**
+     * 取消点赞
+     * @param userId 取消点赞人用户id
+     * @param videoId 视频id
+     * @param videoCreaterId 视频拥有者用户id
+     * @return
+     */
+    @ApiOperation(value="取消点赞", notes="取消点赞接口")
+    @RequestMapping(value="/unUserLike", method = RequestMethod.POST)
+    public MessageResult unUserLike(String userId, String videoId, String videoCreaterId) {
+        videoService.userUnLikeVideo(userId, videoId, videoCreaterId);
+        return MessageResult.ok();
+    }
 }

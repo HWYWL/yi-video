@@ -26,6 +26,8 @@ public class ApiInterceptor implements HandlerInterceptor {
 
     /**
      * 拦截请求，在controller调用之前
+     * 返回 false：请求被拦截，返回
+     * 返回 true ：请求OK，可以继续执行，放行
      */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object arg2) throws Exception {
@@ -37,39 +39,39 @@ public class ApiInterceptor implements HandlerInterceptor {
         if (StringUtils.isNotBlank(userId) && StringUtils.isNotBlank(userToken)) {
             String uniqueToken = redis.get(USER_REDIS_SESSION + ":" + userId);
             if (StringUtils.isEmpty(uniqueToken) && StringUtils.isBlank(uniqueToken)) {
-                System.out.println("请登录...");
                 returnErrorResponse(response, messageResult.errorTokenMsg("请登录..."));
+
                 return false;
             } else {
                 if (!uniqueToken.equals(userToken)) {
-                    System.out.println("账号被挤出...");
-                    returnErrorResponse(response, messageResult.errorTokenMsg("账号被挤出..."));
+                    returnErrorResponse(response, messageResult.errorTokenMsg("账号在其他设备登录..."));
+
                     return false;
                 }
             }
         } else {
-            System.out.println("请登录...");
             returnErrorResponse(response, messageResult.errorTokenMsg("请登录..."));
             return false;
         }
 
-
-        /**
-         * 返回 false：请求被拦截，返回
-         * 返回 true ：请求OK，可以继续执行，放行
-         */
         return true;
     }
 
-    public void returnErrorResponse(HttpServletResponse response, MessageResult result) throws IOException {
-        OutputStream out=null;
-        try{
-            response.setCharacterEncoding("utf-8");
-            response.setContentType("text/json");
+    /**
+     * 把拦截数据返回给前端
+     * @param response
+     * @param result
+     * @throws IOException
+     */
+    private void returnErrorResponse(HttpServletResponse response, MessageResult result) throws IOException {
+        response.setContentType("text/json");
+        response.setCharacterEncoding("utf-8");
+        OutputStream out = null;
+        try {
             out = response.getOutputStream();
             out.write(JSONUtil.parse(result).toStringPretty().getBytes("utf-8"));
             out.flush();
-        } finally{
+        } finally {
             if(out!=null){
                 out.close();
             }

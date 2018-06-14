@@ -25,6 +25,11 @@ public class BasicController {
     public static final String USER_REDIS_SESSION = "user_redis_session";
 
     /**
+     * redis token超时时间（ms）
+     */
+    public static final int REDIS_TIMEOUT = 1000 * 60 * 30;
+
+    /**
      * ffmpeg 文件路径
      */
     public static String FFMPEG_EXE_FILE;
