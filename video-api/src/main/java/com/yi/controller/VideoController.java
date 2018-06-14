@@ -271,4 +271,46 @@ public class VideoController extends BasicController {
         videoService.userUnLikeVideo(userId, videoId, videoCreaterId);
         return MessageResult.ok();
     }
+
+    /**
+     * 我关注的人发的视频
+     * @param userId
+     * @param page
+     * @return
+     */
+    @ApiOperation(value="我关注的人发的视频", notes="我关注的人发的视频接口")
+    @RequestMapping(value="/showMyFollow", method = RequestMethod.POST)
+    public MessageResult showMyFollow(String userId, Integer page) {
+
+        if (StringUtils.isBlank(userId)) {
+            return MessageResult.ok();
+        }
+
+        page = page == null ? 1 : page;
+
+        PagedResult videosList = videoService.queryMyFollowVideos(userId, page, PAGE_SIZE);
+
+        return MessageResult.ok(videosList);
+    }
+
+    /**
+     * 点赞过的视频列表
+     * @param userId 用户id
+     * @param page 当前页
+     * @return
+     */
+    @ApiOperation(value="我点赞过视频", notes="我点赞过视频接口")
+    @RequestMapping(value="/showMyLike", method = RequestMethod.POST)
+    public MessageResult showMyLike(String userId, Integer page){
+
+        if (StringUtils.isBlank(userId)) {
+            return MessageResult.ok();
+        }
+
+        page = page == null ? 1 : page;
+
+        PagedResult videosList = videoService.queryMyLikeVideos(userId, page, PAGE_SIZE);
+
+        return MessageResult.ok(videosList);
+    }
 }

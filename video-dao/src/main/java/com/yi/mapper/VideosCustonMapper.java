@@ -33,4 +33,18 @@ public interface VideosCustonMapper extends MyMapper<Videos> {
      * @param videoId 视频id
      */
     void reduceVideoLikeCount(String videoId);
+
+    /**
+     * 查询关注的视频
+     * @param userId 用户id
+     * @return
+     */
+    List<VideosVo> queryMyFollowVideos(String userId);
+
+    /**
+     * 查询点赞视频
+     * @param userId 用户id
+     * @return
+     */
+    List<VideosVo> queryMyLikeVideos(String userId);
 }

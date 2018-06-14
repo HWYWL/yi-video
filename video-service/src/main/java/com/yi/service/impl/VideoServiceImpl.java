@@ -134,4 +134,36 @@ public class VideoServiceImpl implements VideoService {
         // 用户受喜欢数量的累减
         usersMapper.reduceReceiveLikeCount(videoCreaterId);
     }
+
+    @Override
+    public PagedResult queryMyFollowVideos(String userId, Integer page, Integer pageSize) {
+        PageHelper.startPage(page, pageSize);
+        List<VideosVo> list = videosCustonMapper.queryMyLikeVideos(userId);
+
+        PageInfo<VideosVo> pageList = new PageInfo<>(list);
+
+        PagedResult pagedResult = new PagedResult();
+        pagedResult.setTotal(pageList.getPages());
+        pagedResult.setRows(list);
+        pagedResult.setPage(page);
+        pagedResult.setRecords(pageList.getTotal());
+
+        return pagedResult;
+    }
+
+    @Override
+    public PagedResult queryMyLikeVideos(String userId, Integer page, Integer pageSize) {
+        PageHelper.startPage(page, pageSize);
+        List<VideosVo> list = videosCustonMapper.queryMyFollowVideos(userId);
+
+        PageInfo<VideosVo> pageList = new PageInfo<>(list);
+
+        PagedResult pagedResult = new PagedResult();
+        pagedResult.setTotal(pageList.getPages());
+        pagedResult.setRows(list);
+        pagedResult.setPage(page);
+        pagedResult.setRecords(pageList.getTotal());
+
+        return pagedResult;
+    }
 }
