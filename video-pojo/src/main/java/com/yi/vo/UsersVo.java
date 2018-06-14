@@ -18,6 +18,9 @@ public class UsersVo implements Serializable {
 
     private String userToken;
 
+    /**
+     * 是否已关注
+     */
     private boolean isFollow;
 
     /**

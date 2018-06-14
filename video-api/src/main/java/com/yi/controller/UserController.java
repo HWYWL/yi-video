@@ -87,9 +87,14 @@ public class UserController extends BasicController {
      * @return
      */
     @RequestMapping(value = "/queryUserInfo", method = RequestMethod.POST)
-    @ApiImplicitParam(name="userId", value="用户id", required=true, dataType="String", paramType="query")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="userId", value="视频拥有者用户id", required=true,
+                    dataType="String", paramType="query"),
+            @ApiImplicitParam(name="fanId", value="粉丝id", required=true,
+                    dataType="String", paramType="query")
+    })
     @ApiOperation(value="查询用户信息", notes="查询用户信息接口")
-    public MessageResult queryUserInfo(String userId) {
+    public MessageResult queryUserInfo(String userId, String fanId) {
         if (StringUtils.isBlank(userId)) {
             return MessageResult.errorMsg("用户id不能为空...");
         }
@@ -98,6 +103,9 @@ public class UserController extends BasicController {
 
         UsersVo usersVo = new UsersVo();
         BeanUtil.copyProperties(users, usersVo);
+
+        // 查看是否已关注
+        usersVo.setFollow(userService.queryIsFollow(userId, fanId));
 
         return MessageResult.ok(usersVo);
     }
@@ -131,5 +139,42 @@ public class UserController extends BasicController {
         publisherVideo.setUserLikeVideo(userLikeVideo);
 
         return MessageResult.ok(publisherVideo);
+    }
+
+
+    @RequestMapping(value = "/beyourfans", method = RequestMethod.POST)
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="userId", value="用户id", required=true,
+                    dataType="String", paramType="query"),
+            @ApiImplicitParam(name="fanId", value="粉丝id", required=true,
+                    dataType="String", paramType="query")
+    })
+    @ApiOperation(value="关注成为粉丝", notes="关注成为粉丝接口")
+    public MessageResult byyourfans(String userId, String fanId) {
+        if (StringUtils.isBlank(userId) || StringUtils.isBlank(fanId)){
+            return MessageResult.errorMsg("非法请求");
+        }
+
+        userService.saveUserFanRelation(userId, fanId);
+
+        return MessageResult.ok();
+    }
+
+    @RequestMapping(value = "/dontbeyourfans", method = RequestMethod.POST)
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="userId", value="用户id", required=true,
+                    dataType="String", paramType="query"),
+            @ApiImplicitParam(name="fanId", value="粉丝id", required=true,
+                    dataType="String", paramType="query")
+    })
+    @ApiOperation(value="取消粉丝关注", notes="取消粉丝关注接口")
+    public MessageResult dontbeyourfans(String userId, String fanId) {
+        if (StringUtils.isBlank(userId) || StringUtils.isBlank(fanId)){
+            return MessageResult.errorMsg("非法请求");
+        }
+
+        userService.deleteUserFanRelation(userId, fanId);
+
+        return MessageResult.ok();
     }
 }

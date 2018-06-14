@@ -1,12 +1,10 @@
 package com.yi.service.impl;
 
+import com.yi.mapper.UsersFansMapper;
 import com.yi.mapper.UsersLikeVideosMapper;
 import com.yi.mapper.UsersMapper;
-import com.yi.model.Users;
-import com.yi.model.UsersExample;
+import com.yi.model.*;
 import com.yi.model.UsersExample.Criteria;
-import com.yi.model.UsersLikeVideos;
-import com.yi.model.UsersLikeVideosExample;
 import com.yi.service.UserService;
 import org.n3r.idworker.Sid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +26,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UsersLikeVideosMapper usersLikeVideosMapper;
+
+    @Autowired
+    UsersFansMapper usersFansMapper;
 
     @Autowired
     private Sid sid;
@@ -73,6 +74,7 @@ public class UserServiceImpl implements UserService {
         return usersMapper.selectByExample(example);
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     @Override
     public void updateUserInfo(Users users) {
         usersMapper.updateByPrimaryKeySelective(users);
@@ -94,5 +96,53 @@ public class UserServiceImpl implements UserService {
         List<UsersLikeVideos> likeVideosList = usersLikeVideosMapper.selectByExample(example);
 
         return likeVideosList != null && likeVideosList.size() > 0;
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    @Override
+    public void saveUserFanRelation(String userId, String fanId) {
+        UsersFans usersFans = new UsersFans();
+
+        usersFans.setId(sid.nextShort());
+        usersFans.setUserId(userId);
+        usersFans.setFanId(fanId);
+
+        // 添加粉丝信息到数据库
+        usersFansMapper.insert(usersFans);
+        // 增加粉丝数
+        usersMapper.addFansCount(userId);
+        // 增加关注数
+        usersMapper.addFollersCount(userId);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    @Override
+    public void deleteUserFanRelation(String userId, String fanId) {
+        UsersFansExample example = new UsersFansExample();
+        UsersFansExample.Criteria criteria = example.createCriteria();
+
+        criteria.andUserIdEqualTo(userId);
+        criteria.andFanIdEqualTo(fanId);
+
+        // 删除数据库中关联的粉丝信息
+        usersFansMapper.deleteByExample(example);
+
+        // 减少粉丝数
+        usersMapper.reduceFansCount(userId);
+        // 减少关注数
+        usersMapper.reduceFollersCount(userId);
+    }
+
+    @Override
+    public Boolean queryIsFollow(String userId, String fanid) {
+        UsersFansExample example = new UsersFansExample();
+        UsersFansExample.Criteria criteria = example.createCriteria();
+
+        criteria.andUserIdEqualTo(userId);
+        criteria.andFanIdEqualTo(fanid);
+
+        List<UsersFans> fansList = usersFansMapper.selectByExample(example);
+
+        return fansList != null && fansList.size() > 0;
     }
 }
