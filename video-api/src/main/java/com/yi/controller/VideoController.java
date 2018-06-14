@@ -4,6 +4,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.crypto.SecureUtil;
 import com.yi.enums.VideoStatusEnum;
 import com.yi.model.Bgm;
+import com.yi.model.Comments;
 import com.yi.model.Videos;
 import com.yi.service.BgmService;
 import com.yi.service.VideoService;
@@ -312,5 +313,35 @@ public class VideoController extends BasicController {
         PagedResult videosList = videoService.queryMyLikeVideos(userId, page, PAGE_SIZE);
 
         return MessageResult.ok(videosList);
+    }
+
+    /**
+     * 留言保存
+     * @param comment 留言
+     * @param fatherCommentId 留言者id
+     * @param toUserId
+     * @return
+     */
+    @RequestMapping(value = "/saveComment", method = RequestMethod.POST)
+    @ApiOperation(value="留言保存", notes="留言保存接口")
+    public MessageResult saveComment(@RequestBody Comments comment, String fatherCommentId, String toUserId) {
+        comment.setFatherCommentId(fatherCommentId);
+        comment.setToUserId(toUserId);
+
+        videoService.saveComment(comment);
+        return MessageResult.ok();
+    }
+
+    @RequestMapping(value = "/getVideoComments", method = RequestMethod.POST)
+    @ApiOperation(value="获取留言", notes="获取留言接口")
+    public MessageResult getVideoComments(String videoId, Integer page) {
+        if (StringUtils.isBlank(videoId)) {
+            return MessageResult.ok();
+        }
+
+        page = page == null ? 1 : page;
+        PagedResult list = videoService.getAllComments(videoId, page, PAGE_SIZE);
+
+        return MessageResult.ok(list);
     }
 }

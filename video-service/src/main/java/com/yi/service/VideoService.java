@@ -1,5 +1,6 @@
 package com.yi.service;
 
+import com.yi.model.Comments;
 import com.yi.model.Videos;
 import com.yi.utils.PagedResult;
 
@@ -74,4 +75,19 @@ public interface VideoService {
      * @return
      */
     PagedResult queryMyLikeVideos(String userId, Integer page, Integer pageSize);
+
+    /**
+     * 保存用户留言
+     * @param comment
+     */
+    void saveComment(Comments comment);
+
+    /**
+     * 留言分页
+     * @param videoId   视频id
+     * @param page      第几页
+     * @param pageSize  页大小
+     * @return
+     */
+    PagedResult getAllComments(String videoId, Integer page, Integer pageSize);
 }

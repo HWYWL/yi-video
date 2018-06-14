@@ -2,10 +2,13 @@ package com.yi.controller;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.io.FileUtil;
+import com.yi.model.Comments;
 import com.yi.model.Users;
 import com.yi.model.UsersReport;
 import com.yi.service.UserService;
+import com.yi.service.VideoService;
 import com.yi.utils.MessageResult;
+import com.yi.utils.PagedResult;
 import com.yi.vo.PublisherVideo;
 import com.yi.vo.UsersVo;
 import io.swagger.annotations.Api;
@@ -35,6 +38,9 @@ public class UserController extends BasicController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private VideoService videoService;
 
     /**
      * 上传用户头像

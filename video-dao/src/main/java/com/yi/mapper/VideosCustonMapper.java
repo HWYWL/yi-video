@@ -2,6 +2,7 @@ package com.yi.mapper;
 
 import com.yi.model.Videos;
 import com.yi.utils.MyMapper;
+import com.yi.vo.CommentsVO;
 import com.yi.vo.VideosVo;
 import org.apache.ibatis.annotations.Param;
 
@@ -47,4 +48,11 @@ public interface VideosCustonMapper extends MyMapper<Videos> {
      * @return
      */
     List<VideosVo> queryMyLikeVideos(String userId);
+
+    /**
+     * 查询视频留言
+     * @param videoId 视频id
+     * @return
+     */
+    List<CommentsVO> queryComments(String videoId);
 }
