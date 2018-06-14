@@ -1,9 +1,12 @@
 package com.yi.service.impl;
 
+import com.yi.mapper.UsersLikeVideosMapper;
 import com.yi.mapper.UsersMapper;
 import com.yi.model.Users;
 import com.yi.model.UsersExample;
 import com.yi.model.UsersExample.Criteria;
+import com.yi.model.UsersLikeVideos;
+import com.yi.model.UsersLikeVideosExample;
 import com.yi.service.UserService;
 import org.n3r.idworker.Sid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +25,9 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
     @Autowired
     private UsersMapper usersMapper;
+
+    @Autowired
+    private UsersLikeVideosMapper usersLikeVideosMapper;
 
     @Autowired
     private Sid sid;
@@ -75,5 +81,18 @@ public class UserServiceImpl implements UserService {
     @Override
     public Users queryUserInfo(String userId) {
         return usersMapper.selectByPrimaryKey(userId);
+    }
+
+    @Override
+    public boolean isUserLikeVideo(String loginUserId, String videoId) {
+        UsersLikeVideosExample example = new UsersLikeVideosExample();
+        UsersLikeVideosExample.Criteria criteria = example.createCriteria();
+
+        criteria.andUserIdEqualTo(loginUserId);
+        criteria.andVideoIdEqualTo(videoId);
+
+        List<UsersLikeVideos> likeVideosList = usersLikeVideosMapper.selectByExample(example);
+
+        return likeVideosList != null && likeVideosList.size() > 0;
     }
 }

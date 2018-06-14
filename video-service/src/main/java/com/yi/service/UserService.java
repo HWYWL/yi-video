@@ -51,4 +51,12 @@ public interface UserService {
      * @param userId
      */
     Users queryUserInfo(String userId);
+
+    /**
+     * 查询该视频 当前用户是否喜欢
+     * @param loginUserId 登录用户id
+     * @param videoId   视频id
+     * @return
+     */
+    boolean isUserLikeVideo(String loginUserId, String videoId);
 }

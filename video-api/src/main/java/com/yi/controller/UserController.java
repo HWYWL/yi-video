@@ -2,17 +2,18 @@ package com.yi.controller;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.crypto.SecureUtil;
-import cn.hutool.crypto.digest.DigestUtil;
 import com.yi.model.Users;
 import com.yi.service.UserService;
 import com.yi.utils.MessageResult;
+import com.yi.vo.PublisherVideo;
 import com.yi.vo.UsersVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,7 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.util.List;
 
 /**
  * 登录注册
@@ -100,5 +100,36 @@ public class UserController extends BasicController {
         BeanUtil.copyProperties(users, usersVo);
 
         return MessageResult.ok(usersVo);
+    }
+
+    @RequestMapping(value = "/queryPublisher", method = RequestMethod.POST)
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="loginUserId", value="登录用户id", required=true,
+                    dataType="String", paramType="query"),
+            @ApiImplicitParam(name="videoId", value="视频主键id", required=true,
+                    dataType="String", paramType="query"),
+            @ApiImplicitParam(name="publishUserId", value="视频发布者id", required=true,
+                    dataType="String", paramType="query")
+    })
+    @ApiOperation(value="查询视频及用户信息", notes="查询视频及用户信息接口")
+    public MessageResult queryPublisher(String loginUserId, String videoId, String publishUserId) {
+
+        if (StringUtils.isBlank(publishUserId)) {
+            return MessageResult.errorMsg("");
+        }
+
+        // 查询视频发布者的信息
+        Users userInfo = userService.queryUserInfo(publishUserId);
+        UsersVo publisher = new UsersVo();
+        BeanUtils.copyProperties(userInfo, publisher);
+
+        // 查询当前登录者和视频的点赞关系
+        boolean userLikeVideo = userService.isUserLikeVideo(loginUserId, videoId);
+
+        PublisherVideo publisherVideo = new PublisherVideo();
+        publisherVideo.setPublisher(publisher);
+        publisherVideo.setUserLikeVideo(userLikeVideo);
+
+        return MessageResult.ok(publisherVideo);
     }
 }
