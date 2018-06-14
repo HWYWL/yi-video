@@ -318,8 +318,8 @@ public class VideoController extends BasicController {
     /**
      * 留言保存
      * @param comment 留言
-     * @param fatherCommentId 留言者id
-     * @param toUserId
+     * @param fatherCommentId 父评论id
+     * @param toUserId 回复评论人id
      * @return
      */
     @RequestMapping(value = "/saveComment", method = RequestMethod.POST)

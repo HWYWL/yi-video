@@ -9,8 +9,14 @@ import java.util.Date;
 public class Comments implements Serializable {
     private String id;
 
+    /**
+     * 父评论id
+     */
     private String fatherCommentId;
 
+    /**
+     * 回复评论人id
+     */
     private String toUserId;
 
     /**

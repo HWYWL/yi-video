@@ -48,11 +48,4 @@ public interface VideosCustonMapper extends MyMapper<Videos> {
      * @return
      */
     List<VideosVo> queryMyLikeVideos(String userId);
-
-    /**
-     * 查询视频留言
-     * @param videoId 视频id
-     * @return
-     */
-    List<CommentsVO> queryComments(String videoId);
 }

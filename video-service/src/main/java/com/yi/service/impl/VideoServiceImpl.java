@@ -45,6 +45,9 @@ public class VideoServiceImpl implements VideoService {
     private CommentsMapper commentsMapper;
 
     @Autowired
+    private CommentsCustonMapper commentsCustonMapper;
+
+    @Autowired
     private Sid sid;
 
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
@@ -181,8 +184,8 @@ public class VideoServiceImpl implements VideoService {
     @Override
     public PagedResult getAllComments(String videoId, Integer page, Integer pageSize) {
         PageHelper.startPage(page, pageSize);
+        List<CommentsVO> list = commentsCustonMapper.queryComments(videoId);
 
-        List<CommentsVO> list = videosCustonMapper.queryComments(videoId);
         PagedResult grid = new PagedResult();
 
         for (CommentsVO cv : list) {
