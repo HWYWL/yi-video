@@ -35,12 +35,22 @@ public class BasicController {
     public static String FFMPEG_EXE_FILE;
 
     /**
+     * 文件保存的命名空间
+     */
+    public static String FILESPACE;
+
+    /**
      * 分页大小
      */
     public static final Integer PAGE_SIZE = 10;
 
-    @Value("${ffmpeg.path}")
+    @Value("${config.ffmpeg.path}")
     public void setFfmpegExeFile(String ffmpegExeFile) {
         FFMPEG_EXE_FILE = ffmpegExeFile;
+    }
+
+    @Value("${config.file.space}")
+    public void setFILESPACE(String filespace) {
+        BasicController.FILESPACE = filespace;
     }
 }

@@ -2,13 +2,11 @@ package com.yi.controller;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.io.FileUtil;
-import com.yi.model.Comments;
 import com.yi.model.Users;
 import com.yi.model.UsersReport;
 import com.yi.service.UserService;
 import com.yi.service.VideoService;
 import com.yi.utils.MessageResult;
-import com.yi.utils.PagedResult;
 import com.yi.vo.PublisherVideo;
 import com.yi.vo.UsersVo;
 import io.swagger.annotations.Api;
@@ -39,9 +37,6 @@ public class UserController extends BasicController {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private VideoService videoService;
-
     /**
      * 上传用户头像
      * @param userId    用户id
@@ -56,7 +51,6 @@ public class UserController extends BasicController {
         }
 
         // 保存到数据库中的相对路径
-        String uploadPath = "/YI_VIDEO";
         String uploadPathDB = "/" + userId + "/face";
 
         FileOutputStream fileOutputStream = null;
@@ -65,7 +59,7 @@ public class UserController extends BasicController {
         try {
             if (files != null && files.length > 0) {
                 String fileName = files[0].getOriginalFilename();
-                String finalFacePath = uploadPath + uploadPathDB + "/" + fileName;
+                String finalFacePath = FILESPACE + uploadPathDB + "/" + fileName;
                 FileUtil.touch(finalFacePath);
                 uploadPathDB += ("/" + fileName);
 

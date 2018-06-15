@@ -78,7 +78,6 @@ public class VideoController extends BasicController {
         }
 
         // 保存到数据库中的相对路径
-        String uploadPath = "/YI_VIDEO";
         String uploadPathDB = "/" + userId + "/video";
         // 封面
         String coverPathDB = "/" + userId + "/video";
@@ -96,7 +95,7 @@ public class VideoController extends BasicController {
         try {
             if (file != null) {
                 String fileName = file.getOriginalFilename();
-                finalVideoPath = uploadPath + uploadPathDB + "/" + fileName;
+                finalVideoPath = FILESPACE + uploadPathDB + "/" + fileName;
                 FileUtil.touch(finalVideoPath);
 
                 File outFile = new File(finalVideoPath);
@@ -111,7 +110,7 @@ public class VideoController extends BasicController {
 
         if (StringUtils.isNotBlank(bgmId)){
             Bgm bgm = bgmService.queryBgmById(bgmId);
-            finalbgmPath = uploadPath + bgm.getPath();
+            finalbgmPath = FILESPACE + bgm.getPath();
 
             MergeVideoMp3 mergeVideoMp3 = new MergeVideoMp3(FFMPEG_EXE_FILE);
             FetchVideoCover fetchVideoCover = new FetchVideoCover(FFMPEG_EXE_FILE);
@@ -120,11 +119,11 @@ public class VideoController extends BasicController {
                 String name = SecureUtil.simpleUUID();
                 uploadPathDB += ("/" + name+ ".mp4");
                 coverPathDB += ("/" + name+ ".jpg");
-                finalVideoOutPath = uploadPath + uploadPathDB;
+                finalVideoOutPath = FILESPACE + uploadPathDB;
                 // 视频合成
                 mergeVideoMp3.convertor(finalVideoPath, finalbgmPath, videoSeconds, finalVideoOutPath);
                 // 封面截图
-                fetchVideoCover.getCover(finalVideoPath, uploadPath + coverPathDB);
+                fetchVideoCover.getCover(finalVideoPath, FILESPACE + coverPathDB);
             } catch (Exception e) {
                 e.printStackTrace();
                 return MessageResult.errorMsg("视频合成失败!");
