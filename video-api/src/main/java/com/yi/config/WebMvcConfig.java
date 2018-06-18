@@ -22,7 +22,8 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
 	 */
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		registry.addResourceHandler("/**").addResourceLocations("file:" + FILESPACE);
+		registry.addResourceHandler("/**")
+				.addResourceLocations("file:" + FILESPACE);
 	}
 
 	@Bean

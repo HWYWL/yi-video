@@ -1,0 +1,18 @@
+{
+  "pages":[
+    "pages/userLogin/login",
+    "pages/videoinfo/videoinfo",
+    "pages/searchVideo/searchVideo",
+    "pages/report/report",
+    "pages/userRegist/regist",
+    "pages/chooseBgm/chooseBgm",
+    "pages/index/index",
+    "pages/mine/mine"
+  ],
+  "window":{
+    "backgroundTextStyle":"light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "懿短视频",
+    "navigationBarTextStyle":"black"
+  }
+}
