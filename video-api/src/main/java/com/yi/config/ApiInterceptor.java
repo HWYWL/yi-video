@@ -34,23 +34,21 @@ public class ApiInterceptor implements HandlerInterceptor {
         String userId = request.getHeader("headerUserId");
         String userToken = request.getHeader("headerUserToken");
 
-        MessageResult messageResult = new MessageResult();
-
         if (StringUtils.isNotBlank(userId) && StringUtils.isNotBlank(userToken)) {
             String uniqueToken = redis.get(USER_REDIS_SESSION + ":" + userId);
             if (StringUtils.isEmpty(uniqueToken) && StringUtils.isBlank(uniqueToken)) {
-                returnErrorResponse(response, messageResult.errorTokenMsg("请登录..."));
+                returnErrorResponse(response, MessageResult.errorTokenMsg("请登录..."));
 
                 return false;
             } else {
                 if (!uniqueToken.equals(userToken)) {
-                    returnErrorResponse(response, messageResult.errorTokenMsg("账号在其他设备登录..."));
+                    returnErrorResponse(response, MessageResult.errorTokenMsg("账号在其他设备登录..."));
 
                     return false;
                 }
             }
         } else {
-            returnErrorResponse(response, messageResult.errorTokenMsg("请登录..."));
+            returnErrorResponse(response, MessageResult.errorTokenMsg("请登录..."));
             return false;
         }
 
