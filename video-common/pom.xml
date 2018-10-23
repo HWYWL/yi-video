@@ -14,7 +14,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <log4j.version>1.3.8.RELEASE</log4j.version>
-        <hutool-all.version>4.0.12</hutool-all.version>
+        <hutool-all.version>4.1.18</hutool-all.version>
         <druid-spring-boot-starter.version>1.1.9</druid-spring-boot-starter.version>
         <mybatis-spring-boot-starter.version>1.3.2</mybatis-spring-boot-starter.version>
         <mapper-spring-boot-starter.version>1.2.4</mapper-spring-boot-starter.version>
